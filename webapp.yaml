@@ -1,0 +1,124 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Springfield Car Share Web App
+
+Parameters:
+
+  SiteBucketName: 
+    Type: String
+    Default: lia-springfield-site
+    Description: Unique name for website content bucket. Can only consist of lowercase letters, numbers, dots, and hyphens. 
+    MaxLength: '63'
+    MinLength: '3'
+  
+  WebAclID:
+    Type: String
+  
+  DomainName:
+    Type: String
+    Default: awslia.people.aws.dev
+    Description: Website domain name.
+  
+  TLSCertificateArn:
+    Type: String
+    Default: arn:aws:acm:us-east-1:461723144205:certificate/fe04a8a3-5b74-4800-81db-84791cfbc514
+    Description: SSL/TLS certificate ARN for domain name (from AWS Certificate Manager).
+  
+  Region:
+    Type: String
+    Default: ca-central-1
+    Description: AWS region for services.
+  
+Resources:
+
+  #S3 - Website Bucket
+  WebsiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref SiteBucketName
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+        IgnorePublicAcls: true
+        
+  #Origin Access Identity
+  SpringfieldOAI:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: SpringfieldOriginAccessIdentity
+  
+  #CloudFront Distribution
+  SpringfieldCloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        WebACLId: !Ref WebAclID
+        Aliases: 
+          - !Ref DomainName
+        ViewerCertificate:
+          AcmCertificateArn: arn:aws:acm:us-east-1:461723144205:certificate/fe04a8a3-5b74-4800-81db-84791cfbc514
+          SslSupportMethod: sni-only
+        HttpVersion: http2
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          Compress: true
+          TargetOriginId: !Sub ${SiteBucketName}.s3.${Region}.amazonaws.com
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD]
+          CachedMethods: [GET, HEAD]
+          ForwardedValues:
+            QueryString: true
+            Cookies:
+              Forward: none
+        Origins:
+          - DomainName: !Sub ${SiteBucketName}.s3.${Region}.amazonaws.com
+            Id: !Sub ${SiteBucketName}.s3.${Region}.amazonaws.com #Unique identifier for origin
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${SpringfieldOAI}
+        Enabled: true
+
+  #Update S3 Bucket Policy to set up Origin Access Identity
+  OAIBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties: 
+      Bucket: !Ref SiteBucketName
+      PolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            AWS: !Sub arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${SpringfieldOAI}
+          Action: s3:GetObject
+          Resource: !Sub arn:aws:s3:::${SiteBucketName}/*
+
+  #Cognito
+  SpringfieldUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      AliasAttributes:
+        - email
+      AutoVerifiedAttributes: 
+        - email
+      UserPoolName: SpringfieldCarShare
+
+  SpringfieldUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: SpringfieldWebApp
+      GenerateSecret: false
+      UserPoolId: !Ref SpringfieldUserPool
+
+Outputs:
+
+  CognitoUserPoolsID:
+    Value: !Ref SpringfieldUserPool
+  
+  CognitoWebClientID:
+    Value: !Ref SpringfieldUserPoolClient
+  
+
+
+
+
+
+    
