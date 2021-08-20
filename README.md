@@ -10,6 +10,10 @@ This project creates the infrastructure required to host a single page serverles
 
 ## Prerequisites
 
+- AWS credentials with permission to deploy CloudFormation templates
+- AWS CLI and [cfn-cli](https://github.com/Kotaimen/awscfncli) installed
+- Valid domain name and TLS certificate. Replace domain name parameter and TLS certificate parameter with custom values.
+
 ## Deployment using CloudFormation Command Line Interface
 
 ## Deployment using AWS Console
