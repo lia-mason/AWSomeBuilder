@@ -12,13 +12,19 @@ This project creates the infrastructure required to host a single page serverles
 
 - AWS credentials with permission to deploy CloudFormation templates
 - AWS CLI and [cfn-cli](https://github.com/Kotaimen/awscfncli) installed
+- React single page application
 - Valid domain name and TLS certificate. Replace domain name parameter and TLS certificate parameter with custom values.
 
 ## Deployment using CloudFormation Command Line Interface
 
-## Deployment using AWS Console
+Run this command from the root folder of this project.
 
-## Integrating Cognito and API Gateway into your app
+`cfn-cli stack deploy`
+
+## Using Cognito and API Gateway in your React app
+
+The output of the CloudFormation stacks contains a Cognito User Pools ID, Web Client ID, and API endpoint.
+Replace the API endpoint in your React app with the corresponding output.
 
 ## Contact
 
