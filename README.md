@@ -1,8 +1,8 @@
 # AWSomeBuilder
 
-## Introduction
+## Overview
 
-This project creates the infrastructure required to host a single page serverless web application for the Springfield Car Share Initiative.
+The CloudFormation templates in this project create the infrastructure required to host a single page serverless web application for the Springfield Car Share Initiative. The project also contains a placeholder React web application.
 
 ## Architecture
 
@@ -11,7 +11,7 @@ This project creates the infrastructure required to host a single page serverles
 ## Prerequisites
 
 - AWS credentials with permission to deploy CloudFormation templates
-- AWS CLI and [cfn-cli](https://github.com/Kotaimen/awscfncli) installed
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [cfn-cli](https://github.com/Kotaimen/awscfncli) installed
 - React single page application
 - Valid domain name and TLS certificate. Replace domain name parameter and TLS certificate parameter with custom values.
 
