@@ -28,7 +28,7 @@ Infrastructure Components:
 
 ## Deployment
 
-Run this command from the root folder of this project.
+Run this command from the root directory of this project.
 
 `cfn-cli stack deploy`
 
