@@ -32,10 +32,10 @@ Run this command from the root folder of this project.
 
 `cfn-cli stack deploy`
 
-## Integration of Cognito and API Gateway in your React app
+## Configuring React app
 
 The output of the `webapp.yaml` CloudFormation stack contains a Cognito User Pools ID, Web Client ID, and API endpoint.
-Replace the API endpoint in your React app, and replace the Cognito User Pools ID and Web Client ID in your `aws-exports.js` file.
+Use these values to replace the API endpoint in your React app, and replace the Cognito User Pools ID and Web Client ID in your `aws-exports.js` file.
 
 ## Contact
 
