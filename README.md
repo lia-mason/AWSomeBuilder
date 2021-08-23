@@ -25,6 +25,7 @@ Infrastructure Components:
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [AWS CloudFormation CLI](https://github.com/Kotaimen/awscfncli) installed
 - A React single page application
 - A valid domain name and TLS certificate. Replace domain name parameter and TLS certificate parameter with your own values. 
+- S3 bucket names must be universally unique. Replace SiteBucketName parameter with a unique name.
 
 ## Deployment
 
