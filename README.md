@@ -28,9 +28,7 @@ Infrastructure Components:
 
 ## Deployment
 
-Run this command from the root directory of this project.
-
-`cfn-cli stack deploy`
+Run `cfn-cli stack deploy` from the root directory of this project.
 
 ## Integration with React app
 
