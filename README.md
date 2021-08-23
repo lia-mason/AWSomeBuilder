@@ -8,7 +8,7 @@ Infrastructure Components:
 
 - [Amazon Route 53](https://aws.amazon.com/route53/): To register our domain name.
 - [Amazon S3](https://aws.amazon.com/s3/): Our website is hosted using an S3 bucket.
-- [Amazon CloudFront](https://aws.amazon.com/cloudfront): Used to make our website accessible to the public. A fast content delivery network with low latency and high availability.
+- [Amazon CloudFront](https://aws.amazon.com/cloudfront): A fast content delivery network with low latency and high availability. Used to make our website in S3 accessible to the public.
 - [AWS Web Application Firewall](https://aws.amazon.com/waf/): To control the traffic that reaches our website using security rules. The following rules have been configured: `AWSManagedRulesCommonRuleSet`, `AWSManagedRulesAmazonIpReputationList`, `AWSManagedRulesBotControlRuleSet`
 - [Amazon Cognito](https://aws.amazon.com/cognito/): To provide user sign-up and sign-in.
 - [Amazon API Gateway](https://aws.amazon.com/apigateway/): To route API requests to backend Lambda functions.
