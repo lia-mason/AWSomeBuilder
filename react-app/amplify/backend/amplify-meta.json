@@ -1,0 +1,38 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-springfieldapp-dev-170436-authRole",
+      "UnauthRoleArn": "arn:aws:iam::681573994404:role/amplify-springfieldapp-dev-170436-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::681573994404:role/amplify-springfieldapp-dev-170436-authRole",
+      "Region": "ca-central-1",
+      "DeploymentBucketName": "amplify-springfieldapp-dev-170436-deployment",
+      "UnauthRoleName": "amplify-springfieldapp-dev-170436-unauthRole",
+      "StackName": "amplify-springfieldapp-dev-170436",
+      "StackId": "arn:aws:cloudformation:ca-central-1:681573994404:stack/amplify-springfieldapp-dev-170436/ec981900-ed8b-11eb-abae-06890db87064",
+      "AmplifyAppId": "dt2k64z913sh3"
+    }
+  },
+  "auth": {
+    "springfieldappd0a905d6": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-springfieldapp-dev-170436-deployment/amplify-cfn-templates/auth/springfieldappd0a905d6-cloudformation-template.yml",
+        "logicalId": "authspringfieldappd0a905d6"
+      },
+      "lastPushTimeStamp": "2021-07-25T21:09:41.556Z",
+      "output": {
+        "UserPoolId": "ca-central-1_wZb8mMPWl",
+        "AppClientIDWeb": "6q0qv2kgh8jn188qqipbu79847",
+        "AppClientID": "unbl35bk9c1uardu9htigb0j0",
+        "IdentityPoolId": "ca-central-1:5ced3253-2629-4af3-8e08-e28faecac637",
+        "UserPoolArn": "arn:aws:cognito-idp:ca-central-1:681573994404:userpool/ca-central-1_wZb8mMPWl",
+        "IdentityPoolName": "springfieldappd0a905d6_identitypool_d0a905d6__dev",
+        "UserPoolName": "springfieldappd0a905d6_userpool_d0a905d6"
+      },
+      "lastPushDirHash": "UHEegdwgTKqyQ8TW0TN7wfSjLag="
+    }
+  }
+}

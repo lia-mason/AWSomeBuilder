@@ -1,0 +1,59 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #eaf1f5;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.hero {
+  background-image: url(./images/springfieldheader.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  padding-top: 50px;
+  width: 100%;
+  height: 100%;
+  background-position: center center;
+}
+
+.hero-content {
+  position: relative;
+}
+
+.bookings-content {
+  position: relative;
+  margin-top: 25%;
+  margin-right: 30%;
+  margin-left: 30%;
+  background-color: #eaf1f5;
+  padding: 1px 0 15px 0;
+}
+
+h1 {
+  font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+  color: #1d2830;
+  font-size: 300%;
+}
+
+h3 {
+  font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+  color: #1d2830;
+}
+
+button {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+p {
+  font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+  font-size: 16px;
+}

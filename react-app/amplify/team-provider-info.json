@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-springfieldapp-dev-170436-authRole",
+      "UnauthRoleArn": "arn:aws:iam::681573994404:role/amplify-springfieldapp-dev-170436-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::681573994404:role/amplify-springfieldapp-dev-170436-authRole",
+      "Region": "ca-central-1",
+      "DeploymentBucketName": "amplify-springfieldapp-dev-170436-deployment",
+      "UnauthRoleName": "amplify-springfieldapp-dev-170436-unauthRole",
+      "StackName": "amplify-springfieldapp-dev-170436",
+      "StackId": "arn:aws:cloudformation:ca-central-1:681573994404:stack/amplify-springfieldapp-dev-170436/ec981900-ed8b-11eb-abae-06890db87064",
+      "AmplifyAppId": "dt2k64z913sh3"
+    },
+    "categories": {
+      "auth": {
+        "springfieldappd0a905d6": {}
+      }
+    }
+  }
+}
