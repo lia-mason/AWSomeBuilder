@@ -34,8 +34,7 @@ Run this command from the root folder of this project.
 
 ## Configuring React app
 
-The output of the `webapp.yaml` CloudFormation stack contains a Cognito User Pools ID, Web Client ID, and API endpoint.
-Use these values to replace the API endpoint in your React app, and replace the Cognito User Pools ID and Web Client ID in your `aws-exports.js` file.
+The output of the WebApp CloudFormation stack contains a Cognito User Pools ID, Web Client ID, and API endpoint. Outputs can be found in the AWS console by going to CloudFormation > Stack Name > Outputs. Replace the API endpoint in your React app. To integrate Cognito, include the [AWS Amplify](https://www.npmjs.com/package/aws-amplify) library in your app and replace the Cognito User Pools ID and Web Client ID in your `aws-exports.js` file. 
 
 ## Contact
 
