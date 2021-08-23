@@ -23,8 +23,8 @@ Infrastructure Components:
 
 - AWS credentials with permission to deploy CloudFormation templates
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [AWS CloudFormation CLI](https://github.com/Kotaimen/awscfncli) installed
-- React single page application
-- Valid domain name and TLS certificate. Replace domain name parameter and TLS certificate parameter with custom values. 
+- A React single page application
+- A Valid domain name and TLS certificate. Replace domain name parameter and TLS certificate parameter with your own values. 
 
 ## Deployment
 
