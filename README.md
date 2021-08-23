@@ -26,16 +26,16 @@ Infrastructure Components:
 - React single page application
 - Valid domain name and TLS certificate. Replace domain name parameter and TLS certificate parameter with custom values. 
 
-## Deployment using CloudFormation Command Line Interface
+## Deployment
 
 Run this command from the root folder of this project.
 
 `cfn-cli stack deploy`
 
-## Using Cognito and API Gateway in your React app
+## Integration of Cognito and API Gateway in your React app
 
-The output of the CloudFormation stacks contains a Cognito User Pools ID, Web Client ID, and API endpoint.
-Replace the API endpoint in your React app with the corresponding output.
+The output of the `webapp.yaml` CloudFormation stack contains a Cognito User Pools ID, Web Client ID, and API endpoint.
+Replace the API endpoint in your React app, and replace the Congito User Pools ID and Web Client ID in your `aws-exports.js` file.
 
 ## Contact
 
