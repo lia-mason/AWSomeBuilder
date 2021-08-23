@@ -11,7 +11,7 @@ The CloudFormation templates in this project create the infrastructure required 
 ## Prerequisites
 
 - AWS credentials with permission to deploy CloudFormation templates
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [cfn-cli](https://github.com/Kotaimen/awscfncli) installed
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) and [AWS CloudFormation CLI](https://github.com/Kotaimen/awscfncli) installed
 - React single page application
 - Valid domain name and TLS certificate. Replace domain name parameter and TLS certificate parameter with custom values.
 
