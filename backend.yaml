@@ -1,0 +1,273 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Springfield Car Share Serverless Backend
+
+Parameters:
+
+  DynamoDBTableName:
+    Type: String
+    Default: Bookings
+    Description: DynamoDB table name. Can contain uppercase or lowercase letters, numbers, underscores, hyphens, and dots.
+    MaxLength: '255'
+    MinLength: '3'
+  
+Resources:
+
+  #DynamoDB
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref DynamoDBTableName
+      KeySchema:
+        - AttributeName: username
+          KeyType: HASH
+        - AttributeName: date_time
+          KeyType: RANGE
+      AttributeDefinitions:
+        - AttributeName: username
+          AttributeType: S
+        - AttributeName: date_time
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+
+  #Lambda IAM Role to access DynamoDB
+  LambdaDDBAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: LambdaDDBAccess
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: LambdaDDBAccess
+          PolicyDocument: 
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:Scan
+                Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${DynamoDBTableName}'
+
+  #API Gateway IAM Role to invoke Lambda function
+  ApiGwLambdaAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: ApiGwLambdaAccess
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: ApiGwLambdaAccess
+          PolicyDocument: 
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource: '*'
+
+  #Lambda Functions
+  GetBookingsFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: GetBookings
+      Role: !GetAtt LambdaDDBAccessRole.Arn
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+
+          ddb_client = boto3.resource('dynamodb')
+
+          def lambda_handler(event, context):
+            table = ddb_client.Table('Bookings')
+    
+            response = table.scan()
+            items = response['Items']
+    
+            return {
+              'statusCode': 200,
+              'headers': {
+                'Access-Control-Allow-Origin': '*'
+              },
+            'body': json.dumps(items)
+            }
+      Runtime: python3.8
+      Handler: index.lambda_handler
+      Timeout: 5
+
+  BookCarFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: BookCar
+      Role: !GetAtt LambdaDDBAccessRole.Arn
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import datetime
+          from random import seed
+          from random import randint
+
+          ddb_client = boto3.resource('dynamodb')
+
+          def lambda_handler(event, context):
+              table = ddb_client.Table('Bookings')
+
+              cars = [
+              {"license_plate": "BHFF-122", "brand": "Nissan", "location": "5990 Granville St Springfield BC V6M 3E1"},
+              {"license_plate": "CDFJ-437", "brand": "Honda", "location": "2233 Jefferson Ave West Springfield BC V7V 2A9"},
+              {"license_plate": "AJBR-934", "brand": "Toyota", "location": "44 Main St Springfield BC V5X 3J9"}
+              ]
+              
+              car = cars[randint(0, len(cars) - 1)];
+
+              booking_id = str(randint(1, 10000))
+              username = "user1"
+
+              table.put_item(
+                  Item={
+                      'username': username,
+                      'booking_id':  booking_id,
+                      'date_time': str(datetime.datetime.now()),
+                      'license_plate': car['license_plate']
+                  }
+              )
+              
+              items={
+                      'booking_id':  booking_id,
+                      'license_plate': car['license_plate'],
+                      'brand': car['brand'],
+                      'location': car['location']
+                  }
+              
+              return {
+                  'statusCode': 200,
+                  'headers': {
+                      'Access-Control-Allow-Origin': '*'
+                  },
+                  'body': json.dumps(items)
+              }
+      Runtime: python3.8
+      Handler: index.lambda_handler
+      Timeout: 5
+
+  #API Gateway
+  SpringfieldHTTPApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: SpringfieldHTTPApi
+      ProtocolType: HTTP
+
+  ApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties: 
+      ApiId: !Ref SpringfieldHTTPApi
+      AutoDeploy: true
+      StageName: $default
+  
+  GetBookingsRoute:
+    Type: AWS::ApiGatewayV2::Route
+    DependsOn:
+      - LambdaIntegrationGetBookings
+    Properties:
+      ApiId: !Ref SpringfieldHTTPApi
+      RouteKey: ANY /GetBookings
+      Target: !Join 
+      - /
+      - - integrations
+        - !Ref LambdaIntegrationGetBookings
+  
+  BookCarRoute:
+    Type: AWS::ApiGatewayV2::Route
+    DependsOn:
+      - LambdaIntegrationBookCar
+    Properties:
+      ApiId: !Ref SpringfieldHTTPApi
+      RouteKey: ANY /BookCar
+      Target: !Join 
+      - /
+      - - integrations
+        - !Ref LambdaIntegrationBookCar
+
+  #Lambda Integrations and Permissions
+  LambdaIntegrationGetBookings:
+    Type: 'AWS::ApiGatewayV2::Integration'
+    Properties:
+      ApiId: !Ref SpringfieldHTTPApi
+      Description: Lambda Integration
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Join
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':apigateway:'
+          - !Ref 'AWS::Region'
+          - ':lambda:path/2015-03-31/functions/'
+          - !GetAtt GetBookingsFunction.Arn
+          - /invocations
+      IntegrationMethod: POST
+      PayloadFormatVersion: '2.0'
+
+  GetBookingsLambdaPermissions:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt GetBookingsFunction.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub
+        - "arn:aws:execute-api:${REGION}:${ACCOUNT}:${API_ID}/*"
+        - API_ID: !Ref SpringfieldHTTPApi
+          REGION: !Sub ${AWS::Region}
+          ACCOUNT: !Sub ${AWS::AccountId}
+  
+  LambdaIntegrationBookCar:
+    Type: 'AWS::ApiGatewayV2::Integration'
+    Properties:
+      ApiId: !Ref SpringfieldHTTPApi
+      Description: Lambda Integration
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Join
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':apigateway:'
+          - !Ref 'AWS::Region'
+          - ':lambda:path/2015-03-31/functions/'
+          - !GetAtt BookCarFunction.Arn
+          - /invocations
+      IntegrationMethod: POST
+      PayloadFormatVersion: '2.0'
+
+  BookCarLambdaPermissions:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt BookCarFunction.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub
+        - "arn:aws:execute-api:${REGION}:${ACCOUNT}:${API_ID}/*"
+        - API_ID: !Ref SpringfieldHTTPApi
+          REGION: !Sub ${AWS::Region}
+          ACCOUNT: !Sub ${AWS::AccountId}
+
+Outputs:
+  
+  SpringfieldApiEndpoint:
+    Value: !GetAtt SpringfieldHTTPApi.ApiEndpoint
+
+
+
+
+
+    
